@@ -10,7 +10,7 @@ namespace ShopGravity
         public override string ModuleName => "[SHOP] Gravity";
         public override string ModuleDescription => "";
         public override string ModuleAuthor => "E!N";
-        public override string ModuleVersion => "0.0.1";
+        public override string ModuleVersion => "v1.0.1";
 
         private IShopApi? SHOP_API;
         private const string CategoryName = "Gravity";
@@ -63,7 +63,7 @@ namespace ShopGravity
             RegisterListener<Listeners.OnClientDisconnect>(playerSlot => playerGravity[playerSlot] = null!);
         }
 
-        public void OnClientBuyItem(CCSPlayerController player, int itemId, string categoryName, string uniqueName, int buyPrice, int sellPrice, int duration, int count)
+        public HookResult OnClientBuyItem(CCSPlayerController player, int itemId, string categoryName, string uniqueName, int buyPrice, int sellPrice, int duration, int count)
         {
             if (TryGetItemGravity(uniqueName, out float gravity))
             {
@@ -73,9 +73,10 @@ namespace ShopGravity
             {
                 Logger.LogError($"{uniqueName} has invalid or missing 'lvl' in config!");
             }
+            return HookResult.Continue;
         }
 
-        public void OnClientToggleItem(CCSPlayerController player, int itemId, string uniqueName, int state)
+        public HookResult OnClientToggleItem(CCSPlayerController player, int itemId, string uniqueName, int state)
         {
             if (state == 1 && TryGetItemGravity(uniqueName, out float gravity))
             {
@@ -85,15 +86,17 @@ namespace ShopGravity
             {
                 OnClientSellItem(player, itemId, uniqueName, 0);
             }
+            return HookResult.Continue;
         }
 
-        public void OnClientSellItem(CCSPlayerController player, int itemId, string uniqueName, int sellPrice)
+        public HookResult OnClientSellItem(CCSPlayerController player, int itemId, string uniqueName, int sellPrice)
         {
             playerGravity[player.Slot] = null!;
             if (player.Pawn.Value != null)
             {
                 player.Pawn.Value.GravityScale = 1.0f;
             }
+            return HookResult.Continue;
         }
 
         private static bool TryGetItemGravity(string uniqueName, out float gravity)
