@@ -40,7 +40,7 @@ namespace ShopGravity
         {
             if (JsonGravity == null || SHOP_API == null) return;
 
-            SHOP_API.CreateCategory(CategoryName, "Гравитация");
+            SHOP_API.CreateCategory(CategoryName, "Р“СЂР°РІРёС‚Р°С†РёСЏ");
 
             var sortedItems = JsonGravity
                 .Properties()
